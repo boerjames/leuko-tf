@@ -2,7 +2,7 @@
 import sqlite3
 import csv
 
-class ResultsManager:
+class ResultsManager(object):
 
     ### Constructor and Destructor
     def __init__(self, database_name, battery_name):
