@@ -18,7 +18,7 @@ class NetworkBuilder(object):
                       pool_size=2,
                       pool_stride=2):
 
-        x = tf.placeholder(tf.float32, [None, np.prod(self._input_size)])
+        x = tf.placeholder(tf.float32, [None, self._input_size[0], self._input_size[1], self._input_size[2]])
         y = tf.placeholder(tf.float32, [None, self._n_class])
 
         x = tf.reshape(x, shape=[-1, self._input_size[0], self._input_size[1], self._input_size[2]])
@@ -58,8 +58,7 @@ class NetworkBuilder(object):
         W = tf.Variable(tf.random_normal([n_neurons, self._n_class]))
         b = tf.Variable(tf.random_normal([self._n_class]))
         x = tf.add(tf.matmul(x, W), b)
-        x = tf.nn.relu(x)
+        x = tf.nn.softmax(x)
 
         print(x.get_shape())
-
         return x
