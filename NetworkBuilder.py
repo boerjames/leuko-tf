@@ -4,8 +4,8 @@ import numpy as np
 class NetworkBuilder(object):
 
     # INPUT -> [[CONV -> ACT]*N -> POOL?]*M -> [FC -> ACT]*K -> FC
-    def __init__(self, input_size, n_class):
-        self._input_size = input_size
+    def __init__(self, input_shape, n_class):
+        self._input_shape = input_shape
         self._n_class = n_class
 
 
@@ -18,14 +18,20 @@ class NetworkBuilder(object):
                       pool_size=2,
                       pool_stride=2):
 
-        input = tf.placeholder(tf.float32, [None, self._input_size[0], self._input_size[1], self._input_size[2]], name='input')
-        output = tf.placeholder(tf.float32, [None, self._n_class], name='output')
+        #input = tf.placeholder(tf.float32, [None, self._input_shape[0], self._input_shape[1], self._input_shape[2]], name='input')
+        temp = [None]
+        temp.extend(self._input_shape)
+        x = tf.placeholder(tf.float32, temp)
+        y = tf.placeholder(tf.float32, [None, self._n_class], name='output')
 
-        network = tf.reshape(input, shape=[-1, self._input_size[0], self._input_size[1], self._input_size[2]])
+        #network = tf.reshape(input, shape=[-1, self._input_shape[0], self._input_shape[1], self._input_shape[2]])
+        temp = [-1]
+        temp.extend(self._input_shape)
+        network = tf.reshape(x, shape=temp)
 
         print(network.get_shape())
 
-        n_filters = self._input_size[2]
+        n_filters = self._input_shape[2]
         for i, val in enumerate(conv_filters):
 
             W = tf.Variable(tf.random_normal([conv_size, conv_size, n_filters, val]))
@@ -61,5 +67,6 @@ class NetworkBuilder(object):
         network = tf.nn.softmax(network)
 
         print(network.get_shape())
+        print()
 
-        return input, output, network
+        return network

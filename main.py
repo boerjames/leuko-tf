@@ -1,7 +1,11 @@
 from NetworkBuilder import NetworkBuilder
 from ResultsManager import ResultsManager
-import DataLoader
+from DataLoader import DataLoader
 
-nb = NetworkBuilder(input_size=[40, 40, 3], n_class=2)
-input, output, network = nb.build_network()
+data_shape = [40, 40, 3]
 
+nb = NetworkBuilder(input_shape=data_shape, n_class=2)
+network = nb.build_network()
+
+dl = DataLoader(path="/tmp/data", input_shape=data_shape, percent_train=0.8, save_data=True)
+dl.load_images()
