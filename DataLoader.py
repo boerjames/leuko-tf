@@ -3,6 +3,7 @@ import sys
 
 import numpy as np
 import scipy.misc
+import matplotlib.pyplot as plt
 
 class DataLoader(object):
 
@@ -98,5 +99,9 @@ class DataLoader(object):
                 print("Data saved: {}".format(save_path))
 
         data = {"train_images": train_images, "train_labels": train_labels, "test_images": test_images, "test_labels": test_labels, "n_images": n_images}
+
+        # img = images[0, :]
+        # plt.imshow(img)
+        # plt.show()
 
         return data

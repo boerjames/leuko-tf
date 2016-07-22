@@ -4,36 +4,34 @@ import numpy as np
 class NetworkBuilder(object):
 
     # INPUT -> [[CONV -> ACT]*N -> POOL?]*M -> [FC -> ACT]*K -> FC
-    def __init__(self, input_shape, n_class):
+    def __init__(self, input_shape, n_class, verbose=True):
         self._input_shape = input_shape
         self._n_class = n_class
-
+        self.verbose = verbose
 
     def build_network(self,
-                      conv_filters=[8, 8, 8, 16, 16, 16, 32, 32, 32],
-                      m=3,
-                      fc_neurons=[100, 50],
-                      conv_size=3,
+                      conv_filters=[8, 12, 16],
+                      m=1,
+                      fc_neurons=[50],
+                      conv_size=5,
                       conv_stride=1,
                       pool_size=2,
                       pool_stride=2):
 
-        #input = tf.placeholder(tf.float32, [None, self._input_shape[0], self._input_shape[1], self._input_shape[2]], name='input')
         temp = [None]
         temp.extend(self._input_shape)
         x = tf.placeholder(tf.float32, temp)
-        y = tf.placeholder(tf.float32, [None, self._n_class], name='output')
+        y = tf.placeholder(tf.float32, [None, self._n_class])
 
-        #network = tf.reshape(input, shape=[-1, self._input_shape[0], self._input_shape[1], self._input_shape[2]])
         temp = [-1]
         temp.extend(self._input_shape)
         network = tf.reshape(x, shape=temp)
 
-        print(network.get_shape())
+        if self.verbose:
+            print(network.get_shape())
 
         n_filters = self._input_shape[2]
         for i, val in enumerate(conv_filters):
-
             W = tf.Variable(tf.random_normal([conv_size, conv_size, n_filters, val]))
             b = tf.Variable(tf.random_normal([val]))
             network = tf.nn.conv2d(network, W, strides=[1, conv_stride, conv_stride, 1], padding='SAME')
@@ -45,7 +43,8 @@ class NetworkBuilder(object):
             if (not i == 0) and (i % m == 0):
                 network = tf.nn.max_pool(network, ksize=[1, pool_size, pool_size, 1], strides=[1, pool_stride, pool_stride, 1], padding='SAME')
 
-            print(network.get_shape())
+            if self.verbose:
+                print(network.get_shape())
 
         shape = network.get_shape().as_list()
         n_neurons = shape[1] * shape[2] * shape[3]
@@ -59,14 +58,16 @@ class NetworkBuilder(object):
 
             n_neurons = val
 
-            print(network.get_shape())
+            if self.verbose:
+                print(network.get_shape())
 
         W = tf.Variable(tf.random_normal([n_neurons, self._n_class]))
         b = tf.Variable(tf.random_normal([self._n_class]))
         network = tf.add(tf.matmul(network, W), b)
-        network = tf.nn.softmax(network)
 
-        print(network.get_shape())
-        print()
+        if self.verbose:
+            print(network.get_shape())
+
+        network = {'x': x, 'y': y, 'prediction': network}
 
         return network
