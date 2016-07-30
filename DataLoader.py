@@ -1,15 +1,13 @@
 import os
-import sys
 
 import numpy as np
 import scipy.misc
-import matplotlib.pyplot as plt
 
 class DataLoader(object):
 
-    def __init__(self, path, input_shape, percent_train, verbose=True, save_data=False):
+    def __init__(self, path, data_shape, percent_train, verbose=True, save_data=False):
         self.path = path
-        self.input_shape = input_shape
+        self.data_shape = data_shape
         self.percent_train = percent_train
         self.verbose = verbose
         self.save_data = save_data
@@ -41,7 +39,7 @@ class DataLoader(object):
             print("Number of classes: {}".format(n_class))
 
         array_shape = [n_images]
-        array_shape.extend(self.input_shape)
+        array_shape.extend(self.data_shape)
         images = np.ndarray(array_shape)
 
         array_shape = [n_images, n_class]
@@ -65,7 +63,7 @@ class DataLoader(object):
                 if len(image.shape) == 2:
                     image = [image, image, image]
 
-                image = scipy.misc.imresize(image, self.input_shape) / 255
+                image = scipy.misc.imresize(image, self.data_shape) / 255
 
                 images[image_counter, :] = image
                 labels[image_counter, :] = label_array[i]
@@ -99,9 +97,5 @@ class DataLoader(object):
                 print("Data saved: {}".format(save_path))
 
         data = {"train_images": train_images, "train_labels": train_labels, "test_images": test_images, "test_labels": test_labels, "n_images": n_images}
-
-        # img = images[0, :]
-        # plt.imshow(img)
-        # plt.show()
 
         return data
