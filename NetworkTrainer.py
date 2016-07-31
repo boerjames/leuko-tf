@@ -1,3 +1,5 @@
+# Class that facilitates the training of network
+
 import tensorflow as tf
 import numpy as np
 import math
@@ -26,6 +28,7 @@ class NetworkTrainer(object):
         correct = tf.equal(tf.argmax(prediction, 1), tf.argmax(y, 1))
         accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
 
+        # prepare session
         init = tf.initialize_all_variables()
         sess = tf.Session()
         sess.run(init)
@@ -38,19 +41,23 @@ class NetworkTrainer(object):
         max_test_accuracy = 0.0
         early_stopping_counter = 0
 
+        # train for the giving number of epochs
         for epoch in range(training_epochs):
-            average_cost = 0.0
-            np.random.shuffle(random_index)
+            average_cost = 0.0                  # reset the cost for each epoch
+            np.random.shuffle(random_index)     # shuffle the data for each epoch
 
+            # for each batch
             for batch in range(n_batch):
                 batch_index = random_index[batch * batch_size : (batch + 1) * batch_size]
                 batch_x = [train_images[i] for i in batch_index]
                 batch_y = [train_labels[i] for i in batch_index]
 
+                # run the optimization algorithm and accumulate cost
                 sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
                 average_cost += sess.run(cost, feed_dict={x: batch_x, y: batch_y}) / n_batch
 
-            train_accuracy = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
+            # find the accuracy for training data and testing data after this epoch training
+            train_accuracy = sess.run(accuracy, feed_dict={x: train_images, y: train_labels})
             test_accuracy = sess.run(accuracy, feed_dict={x: test_images, y: test_labels})
 
             if self.verbose:
@@ -76,6 +83,7 @@ class NetworkTrainer(object):
 
         return train_accuracy, test_accuracy
 
+    # helper function for adding an optimization algorithm
     def _optimization_algorithm(self, optimization_algorithm, learning_rate, cost):
         if optimization_algorithm == 'sgd':
             return tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(cost)

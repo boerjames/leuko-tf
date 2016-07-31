@@ -1,11 +1,16 @@
-import os
+# Class the facilitates the loading of images into the proper data structure for training
+# Images must be organized in the following way:
+#   path/class1/
+#   path/class2/
+#   etc.
 
+import os
 import numpy as np
 import scipy.misc
 
 class DataLoader(object):
 
-    def __init__(self, path, data_shape, percent_train, verbose=True, save_data=False):
+    def __init__(self, path, data_shape, percent_train=0.8, verbose=True, save_data=False):
         self.path = path
         self.data_shape = data_shape
         self.percent_train = percent_train
@@ -13,6 +18,7 @@ class DataLoader(object):
         self.save_data = save_data
 
     def load_images(self):
+
         # setup paths
         paths = set()
         for directory in os.listdir(self.path):
@@ -45,8 +51,8 @@ class DataLoader(object):
         array_shape = [n_images, n_class]
         labels = np.ndarray(array_shape)
         if self.verbose:
-            print("Data shape is: {}".format(images.shape))
-            print("Label shape is: {}".format(labels.shape))
+            print("All images shape is: {}".format(images.shape))
+            print("All labels shape is: {}".format(labels.shape))
 
         # load images
         image_counter = 0
@@ -69,8 +75,6 @@ class DataLoader(object):
                 labels[image_counter, :] = label_array[i]
                 image_counter += 1
 
-        if self.verbose:
-            print("Done loading images.")
 
         # divide into training and test set
         n_train = int(self.percent_train * n_images)
@@ -88,7 +92,7 @@ class DataLoader(object):
             print("Train images shape: {}".format(train_images.shape))
             print("Train labels shape: {}".format(train_labels.shape))
             print("Test images shape:  {}".format(test_images.shape))
-            print("Test labels shape:  {}".format(test_labels.shape))
+            print("Test labels shape:  {}".format(test_labels.shape), end='\n\n')
 
         if self.save_data:
             save_path = os.path.join(os.getcwd(), "data.npz")
@@ -96,6 +100,6 @@ class DataLoader(object):
             if self.verbose:
                 print("Data saved: {}".format(save_path))
 
-        data = {"train_images": train_images, "train_labels": train_labels, "test_images": test_images, "test_labels": test_labels, "n_images": n_images}
+        data = {"train_images": train_images, "train_labels": train_labels, "test_images": test_images, "test_labels": test_labels, "n_images": n_images, "n_class": n_class}
 
         return data

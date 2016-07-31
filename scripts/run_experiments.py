@@ -1,35 +1,34 @@
+# Example of the main script which trains a bunch of CNNs
+# Usage: python run_experiments.py
+
 from DataLoader import DataLoader
 from NetworkBuilder import NetworkBuilder
 from NetworkTrainer import NetworkTrainer
 from ResultsManager import ResultsManager
 
 data_shape = [40, 40, 3]
+verbose = True
 
 dl = DataLoader(path="/tmp/data",
                 data_shape=data_shape,
                 percent_train=0.8,
-                verbose=False,
+                verbose=verbose,
                 save_data=False)
 
 data = dl.load_images()
-print(data["train_images"].shape)
-print(data["train_labels"].shape)
-print(data["test_images"].shape)
-print(data["test_labels"].shape)
-print(data["n_images"])
-print()
+n_class = data["n_class"]
 
 nb = NetworkBuilder(input_shape=data_shape,
-                    n_class=2,
-                    verbose=False)
+                    n_class=n_class,
+                    verbose=verbose)
 
 
 nt = NetworkTrainer(data=data)
 
 
-rm = ResultsManager(database_name='test_db', battery_name='test_batt')
+rm = ResultsManager(database_name=':memory:', battery_name='test_battery')
 
-for x in range(2):
+for x in range(1):
     network = nb.build_network()
     print(network["x"])
     print(network["y"])

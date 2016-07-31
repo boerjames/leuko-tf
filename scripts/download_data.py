@@ -1,5 +1,11 @@
+# This file is used to download images from the facetag database
+# Usage: python download_data.py --path PATH --password PASSWORD
+
+# todo get connected to facetag and make it work, use old torch code as inspiration
+
 import psycopg2
 import argparse
+
 
 def run():
     parser = argparse.ArgumentParser()
