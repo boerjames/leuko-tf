@@ -5,19 +5,26 @@
 #   etc.
 
 import os
+import gc
 import numpy as np
 import scipy.misc
 
 class DataLoader(object):
 
-    def __init__(self, path, data_shape, percent_train=0.8, verbose=True, save_data=False):
+    def __init__(self, path, save_path, data_shape, percent_train=0.8, normalize=True, verbose=True, save_data=False):
         self.path = path
+        self.save_path = save_path
         self.data_shape = data_shape
         self.percent_train = percent_train
+        self.normalize = normalize
         self.verbose = verbose
         self.save_data = save_data
 
     def load_images(self):
+
+        # prepare save data path
+        if not os.path.isdir(self.save_path):
+            os.mkdir(self.save_path)
 
         # setup paths
         paths = set()
@@ -66,6 +73,7 @@ class DataLoader(object):
                 file_path = os.path.join(path, file)
                 image = scipy.misc.imread(file_path)
 
+                # convert greyscale to rgb, naive
                 if len(image.shape) == 2:
                     image = [image, image, image]
 
@@ -74,7 +82,6 @@ class DataLoader(object):
                 images[image_counter, :] = image
                 labels[image_counter, :] = label_array[i]
                 image_counter += 1
-
 
         # divide into training and test set
         n_train = int(self.percent_train * n_images)
@@ -88,17 +95,32 @@ class DataLoader(object):
         test_images = images[test_index, :]
         test_labels = labels[test_index, :]
 
+        # clear out old stuff
+        del images
+        del labels
+        gc.collect()
+
+        # normalize the data based on training data statistics
+        if self.normalize:
+            image_mean = np.mean(train_images, axis=0)
+            image_std = np.std(train_images, axis=0)
+
+            train_images = np.subtract(train_images, image_mean)
+            train_images = np.divide(train_images, image_std)
+            test_images = np.subtract(test_images, image_mean)
+            test_images = np.divide(test_images, image_std)
+
+            # if the network is trained on normalized data, the deployed model must normalize data as well
+            if self.save_data:
+                np.save(os.path.join(self.save_path, 'image_mean'), image_mean)
+                np.save(os.path.join(self.save_path, 'image_std'), image_std)
+
         if self.verbose:
             print("Train images shape: {}".format(train_images.shape))
             print("Train labels shape: {}".format(train_labels.shape))
             print("Test images shape:  {}".format(test_images.shape))
             print("Test labels shape:  {}".format(test_labels.shape), end='\n\n')
 
-        if self.save_data:
-            save_path = os.path.join(os.getcwd(), "data.npz")
-            np.savez(save_path, train_images=train_images, train_labels=train_labels, test_images=test_images, test_labels=test_labels, n_images=n_images)
-            if self.verbose:
-                print("Data saved: {}".format(save_path))
 
         data = {"train_images": train_images, "train_labels": train_labels, "test_images": test_images, "test_labels": test_labels, "n_images": n_images, "n_class": n_class}
 

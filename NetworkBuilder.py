@@ -75,7 +75,7 @@ class NetworkBuilder(object):
         network = tf.add(tf.matmul(network, W), b)
 
         if self.verbose:
-            print("Output layer shape: {}".format(network.get_shape()))
+            print("Output layer shape: {}".format(network.get_shape()), end='\n\n')
 
         network = {'x': x, 'y': y, 'prediction': network}
 
