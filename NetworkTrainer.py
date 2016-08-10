@@ -1,4 +1,5 @@
 # Class that facilitates the training of network
+# todo train on multiple gpus
 
 import tensorflow as tf
 import numpy as np
@@ -75,6 +76,8 @@ class NetworkTrainer(object):
                 max_test_accuracy = test_accuracy
                 max_test_accuracy_epoch = epoch + 1
                 early_stopping_counter = 0
+
+                # todo save network when there is an improvement
             else:
                 early_stopping_counter += 1
 
