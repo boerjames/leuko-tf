@@ -1,5 +1,7 @@
 # Class for managing training results
 
+# todo use safe queries
+
 import sqlite3
 import csv
 import os
