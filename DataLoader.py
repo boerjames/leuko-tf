@@ -4,6 +4,7 @@
 #   path/class2/
 #   etc.
 
+from __future__ import print_function
 import os
 import gc
 import numpy as np
@@ -64,7 +65,7 @@ class DataLoader(object):
         # load images
         image_counter = 0
         label_array = np.eye(n_class, n_class)
-        for i, path in zip(range(n_class), paths):
+        for i, path in zip(xrange(n_class), paths):
             for file in os.listdir(path):
 
                 if os.path.splitext(file)[1].lower() not in valid_extensions:

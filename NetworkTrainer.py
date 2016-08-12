@@ -1,6 +1,7 @@
 # Class that facilitates the training of network
 # todo train on multiple gpus
 
+from __future__ import print_function
 import tensorflow as tf
 import numpy as np
 import math
@@ -34,8 +35,8 @@ class NetworkTrainer(object):
         sess = tf.Session()
         sess.run(init)
 
-        n_batch = math.ceil(n_train / batch_size)
-        random_index = [i for i in range(n_train)]
+        n_batch = int(math.ceil(n_train / batch_size))
+        random_index = [i for i in xrange(n_train)]
 
         train_accuracy = 0.0
         test_accuracy = 0.0
@@ -44,12 +45,12 @@ class NetworkTrainer(object):
         early_stopping_counter = 0
 
         # train for the giving number of epochs
-        for epoch in range(training_epochs):
+        for epoch in xrange(training_epochs):
             average_cost = 0.0                  # reset the cost for each epoch
             np.random.shuffle(random_index)     # shuffle the data for each epoch
 
             # for each batch
-            for batch in range(n_batch):
+            for batch in xrange(n_batch):
                 batch_index = random_index[batch * batch_size : (batch + 1) * batch_size]
                 batch_x = [train_images[i] for i in batch_index]
                 batch_y = [train_labels[i] for i in batch_index]

@@ -12,7 +12,7 @@ def run():
     data_shape = [40, 40, 3]
     verbose = True
     save_data = True
-    save_path = os.path.join(os.curdir, 'save_data/')
+    save_path = os.path.join(os.pardir, 'save_data/')
 
     dl = DataLoader(path="/tmp/data",
                     data_shape=data_shape,

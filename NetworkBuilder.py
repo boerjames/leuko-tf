@@ -1,6 +1,7 @@
 # Class that facilitates the building of CNNs
 # General CNN structure: INPUT -> [[CONV -> ACT]*N -> POOL?]*M -> [FC -> ACT]*K -> FC
 
+from __future__ import print_function
 import tensorflow as tf
 
 class NetworkBuilder(object):
