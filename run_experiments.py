@@ -2,10 +2,8 @@
 # Usage: python run_experiments.py
 
 import os
-from DataLoader import DataLoader
-from NetworkBuilder import NetworkBuilder
-from NetworkTrainer import NetworkTrainer
-from ResultsManager import ResultsManager
+
+import leuko
 
 def run():
     n_experiments = 1
@@ -14,29 +12,29 @@ def run():
     save_data = True
     save_path = os.path.join(os.pardir, 'save_data/')
 
-    dl = DataLoader(path="/tmp/data",
-                    data_shape=data_shape,
-                    percent_train=0.8,
-                    normalize=False,
-                    verbose=verbose,
-                    save_data=save_data,
-                    save_path=save_path)
+    dl = leuko.DataLoader(path="/tmp/data",
+                          data_shape=data_shape,
+                          percent_train=0.8,
+                          normalize=False,
+                          verbose=verbose,
+                          save_data=save_data,
+                          save_path=save_path)
 
     data = dl.load_images()
     n_class = data["n_class"]
 
-    nb = NetworkBuilder(input_shape=data_shape,
-                        n_class=n_class,
-                        verbose=verbose)
+    nb = leuko.NetworkBuilder(input_shape=data_shape,
+                              n_class=n_class,
+                              verbose=verbose)
 
 
-    nt = NetworkTrainer(data=data,
-                        verbose=verbose)
+    nt = leuko.NetworkTrainer(data=data,
+                              verbose=verbose)
 
 
-    rm = ResultsManager(database_name=':memory:',
-                        battery_name='test_battery',
-                        save_path=save_path)
+    rm = leuko.ResultsManager(database_name=':memory:',
+                              battery_name='test_battery',
+                              save_path=save_path)
 
     for exp_id in range(n_experiments):
         if verbose:

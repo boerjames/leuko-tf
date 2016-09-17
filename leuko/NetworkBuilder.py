@@ -12,11 +12,11 @@ class NetworkBuilder(object):
         self.verbose = verbose
 
     def build_network(self,
-                      conv_filters=[8, 12, 16],         # list of how many convolution filters to use in each layer, len(conv_filters) = n
-                      conv_size=[7, 3, 3],              # size of the convolutions for each convolution layer
+                      conv_filters=[8, 8, 8],           # list of how many convolution filters to use in each layer, len(conv_filters) = n
+                      conv_size=[3, 3, 3],              # size of the convolutions for each convolution layer
                       conv_stride=[1, 1, 1],            # stride of the convolutions for each convolution layer
                       m=1,                              # number of convolution layers before each pooling layer
-                      fc_neurons=[50],                  # list of how many neurons are in each fully-connected layer, len(fc_neurons) = k
+                      fc_neurons=[25],                  # list of how many neurons are in each fully-connected layer, len(fc_neurons) = k
                       pool_size=2,                      # size of the pooling
                       pool_stride=2,                    # stride of the pooling
                       activation='elu'):                # activation function to use

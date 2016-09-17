@@ -29,11 +29,16 @@ source ~/tensorflow/bin/activate
 pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.10.0rc0-cp27-none-linux_x86_64.whl
 ```
 
+* Install other dependencies
+```
+pip install scipy Pillow
+```
+
 * Clone this repository if you haven't already
 ```
 git clone https://github.com/boerjames/leuko-tf.git
 ```
 
-Use your favority IDE (mine is PyCharm) to work on this project using the virtual environment we created.
+Use your favorite IDE (mine is PyCharm) to work on this project using the virtual environment we created.
 
 ### server deployment
