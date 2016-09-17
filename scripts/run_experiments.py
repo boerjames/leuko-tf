@@ -8,7 +8,7 @@ from NetworkTrainer import NetworkTrainer
 from ResultsManager import ResultsManager
 
 def run():
-    n_experiments = 2
+    n_experiments = 1
     data_shape = [40, 40, 3]
     verbose = True
     save_data = True
@@ -47,7 +47,7 @@ def run():
         train_accuracy, test_accuracy = nt.train_network(network=network,
                                                          optimization_algorithm='rmsprop',
                                                          learning_rate=0.001,
-                                                         training_epochs=2,
+                                                         training_epochs=20,
                                                          early_stop=30,
                                                          batch_size=256)
 
