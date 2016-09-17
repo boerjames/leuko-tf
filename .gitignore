@@ -4,3 +4,4 @@ __pycache__/*
 *.csv
 *.npz
 save_data/*
+*.pyc
